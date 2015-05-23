@@ -57,7 +57,7 @@ for i = 1:size(obstacles)
             %y = yIntersect(m, b, x);
             if(isPointInsideX(x, XDataLink, XData1))
                 %plot(x,y,'m*','markersize',8)
-                result = 1;
+                result = 1; break
             end
         end
         if(not(isParallel(m, m2, b, b2)))
@@ -65,7 +65,7 @@ for i = 1:size(obstacles)
             %y = yIntersect(m, b, x);
             if(isPointInsideX(x, XDataLink, XData2))
                 %plot(x,y,'m*','markersize',8)
-                result = 1;
+                result = 1; break
             end
         end
         %test vertical lines
@@ -74,7 +74,7 @@ for i = 1:size(obstacles)
             y = yIntersect(m, b, XData3(1));
             if(isPointInsideY(y, YDataLink, YData3))
                 %plot(x,y,'k*','markersize',8)
-                result = 1;
+                result = 1; break
             end
         end
         if(not(isParallel(m, m4, b, b4)))
@@ -82,7 +82,7 @@ for i = 1:size(obstacles)
             y = yIntersect(m, b, XData4(1));
             if(isPointInsideY(y, YDataLink, YData4))
                 %plot(x,y,'k*','markersize',8)
-                result = 1;
+                result = 1; break
             end
         end
     end

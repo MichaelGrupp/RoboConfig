@@ -1,5 +1,6 @@
 %clear existing windows
 close all;
+profile on
 
 %workspace dimensions
 xMax = 100;
@@ -40,7 +41,7 @@ updateJoint(link1, link2);
         if(isCollided)
             collisionData(i,j) = 1;
         end
-        %pause(0.0001);
+        %pause(0.00001);
     end
 end
 toc
@@ -50,4 +51,6 @@ figure;
 axis([0 link1maxAngle 0 link2maxAngle])
 contourf(collisionData')
 colormap(1-gray)
+
+profile viewer
 
