@@ -1,6 +1,5 @@
 %clear existing windows
 close all;
-profile on
 
 %workspace dimensions
 xMax = 100;
@@ -9,7 +8,7 @@ axis([0 xMax 0 yMax])
 
 %robot
 base = [0,0];
-link1Length = 60; link2Length = 30;
+link1Length = 70; link2Length = 30;
 link1maxAngle = 90; link2maxAngle = 360; step = 1;
 
 %init robot laying on bottom of workspace
@@ -27,8 +26,8 @@ obstacle2 = generateObstacle(xMax, yMax);
 obstacle3 = generateObstacle(xMax, yMax);
 obstacle4 = generateObstacle(xMax, yMax);
 %pack the obstacle positions to reduce get/set overhead later
-obstaclePositions = [get(obstacle1, 'Position'); get(obstacle2, 'Position'); 
-    get(obstacle3, 'Position'); get(obstacle4, 'Position')];
+obstaclePositions = [get(obstacle1, 'Position'); get(obstacle2, 'Position');
+    get(obstacle3, 'Position'); get(obstacle4, 'Position')]; 
 
 %move robot and record collisions
 collisionData = zeros(link1maxAngle, link2maxAngle);
@@ -37,14 +36,20 @@ for i = 1:step:link1maxAngle
 rotateLink(link1, step);
 isCollided = collisionSimple(link1, obstaclePositions);
 updateJoint(link1, link2);
+if(not(isCollided))
     for j = 1:step:link2maxAngle
         rotateLink(link2, step);
         isCollided = collisionSimple(link2, obstaclePositions);
         if(isCollided)
             collisionData(i,j) = 1;
+            isCollided=0;
+            %pause(0.00001);
         end
-        %pause(0.00001);
     end
+else %don't test link2 if link1 collided
+    collisionData(i,:) = 1;
+    %pause(0.00001);
+end
 end
 toc
 
@@ -54,6 +59,4 @@ axis([0 link1maxAngle 0 link2maxAngle])
 contourf(collisionData')
 colormap(1-gray)
 xlabel('angle link 1'); ylabel('angle link 2');
-
-profile viewer
 
