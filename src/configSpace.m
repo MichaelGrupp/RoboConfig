@@ -26,18 +26,20 @@ obstacle1 = generateObstacle(xMax, yMax);
 obstacle2 = generateObstacle(xMax, yMax);
 obstacle3 = generateObstacle(xMax, yMax);
 obstacle4 = generateObstacle(xMax, yMax);
-obstacles = [obstacle1, obstacle2, obstacle3, obstacle4]';
+%pack the obstacle positions to reduce get/set overhead later
+obstaclePositions = [get(obstacle1, 'Position'); get(obstacle2, 'Position'); 
+    get(obstacle3, 'Position'); get(obstacle4, 'Position')];
 
 %move robot and record collisions
 collisionData = zeros(link1maxAngle, link2maxAngle);
 tic;
 for i = 1:step:link1maxAngle
 rotateLink(link1, step);
-isCollided = collisionSimple(link1, obstacles);
+isCollided = collisionSimple(link1, obstaclePositions);
 updateJoint(link1, link2);
     for j = 1:step:link2maxAngle
         rotateLink(link2, step);
-        isCollided = collisionSimple(link2, obstacles);
+        isCollided = collisionSimple(link2, obstaclePositions);
         if(isCollided)
             collisionData(i,j) = 1;
         end
@@ -51,6 +53,7 @@ figure;
 axis([0 link1maxAngle 0 link2maxAngle])
 contourf(collisionData')
 colormap(1-gray)
+xlabel('angle link 1'); ylabel('angle link 2');
 
 profile viewer
 

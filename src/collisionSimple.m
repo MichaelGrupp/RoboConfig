@@ -1,8 +1,8 @@
 %simple collision test
 %link: handle of MATLAB line object of a robot link
-%obstacles: row array of square obstacle handles
+%obstaclePositions: matrix with rectangle position data as rows
 %return: x - 1 if robot collides
-function [result] = collisionSimple(link, obstacles)
+function [result] = collisionSimple(link, obstaclePositions)
 
 %y=mx+b   =>  line=slope*x+intercept
 
@@ -35,9 +35,9 @@ b = intercept(XDataLink, YDataLink, m);
 
 %check intersections for each obstacle
 result = 0;
-for i = 1:size(obstacles)
+for i = 1:size(obstaclePositions,1)
     if(result==0)
-        Pos = get(obstacles(i), 'Position'); %[x y Pos(3) height]
+        Pos = obstaclePositions(i,:); %[x y Pos(3) height]
         %4 sides
         XData1 = [Pos(1), Pos(1)+Pos(3)]; YData1 = [Pos(2), Pos(2)];%lower
         XData2 = [Pos(1), Pos(1)+Pos(3)]; YData2 = [Pos(2)+Pos(4), Pos(2)+Pos(4)];%top
@@ -50,38 +50,33 @@ for i = 1:size(obstacles)
         m3 = inf; b3 = intercept(XData3, YData3, m3);
         m4 = inf; b4 = intercept(XData4, YData4, m4);
 
-
-        %test horizontal lines
+        %test lower line (most likely)
         if(not(isParallel(m, m1, b, b1)))
             x = xIntersect(m, m1, b, b1);
             %y = yIntersect(m, b, x);
             if(isPointInsideX(x, XDataLink, XData1))
-                %plot(x,y,'m*','markersize',8)
                 result = 1; break
             end
         end
-        if(not(isParallel(m, m2, b, b2)))
-            x = xIntersect(m, m2, b, b2);
-            %y = yIntersect(m, b, x);
-            if(isPointInsideX(x, XDataLink, XData2))
-                %plot(x,y,'m*','markersize',8)
-                result = 1; break
-            end
-        end
-        %test vertical lines
+        %test left line (2nd most likely)
         if(not(isParallel(m, m3, b, b3)))
             %x = XData3(1);
             y = yIntersect(m, b, XData3(1));
             if(isPointInsideY(y, YDataLink, YData3))
-                %plot(x,y,'k*','markersize',8)
                 result = 1; break
             end
         end
+        %test top line
+        if(not(isParallel(m, m2, b, b2)))
+            x = xIntersect(m, m2, b, b2);
+            if(isPointInsideX(x, XDataLink, XData2))
+                result = 1; break
+            end
+        end
+        %test right line
         if(not(isParallel(m, m4, b, b4)))
-            %x = XData4(1);
             y = yIntersect(m, b, XData4(1));
             if(isPointInsideY(y, YDataLink, YData4))
-                %plot(x,y,'k*','markersize',8)
                 result = 1; break
             end
         end
