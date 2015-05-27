@@ -8,7 +8,7 @@ axis([0 xMax 0 yMax])
 
 %robot
 base = [0,0];
-link1Length = 70; link2Length = 30;
+link1Length = 70; link2Length = 20;
 link1maxAngle = 90; link2maxAngle = 360; step = 1;
 
 %init robot laying on bottom of workspace
@@ -31,35 +31,31 @@ obstaclePositions = [get(obstacle1, 'Position'); get(obstacle2, 'Position');
 
 %move robot and record collisions
 collisionData = zeros(link1maxAngle, link2maxAngle);
-circle1 = circle(link1);
 circle2 = circle(link2);
-hp1 = plot(circle1(1,:), circle1(2,:));
-hp2 = plot(circle2(1,:), circle2(2,:));
-set(hp1, 'XDataSource', 'circle1(1,:)')
-set(hp1, 'YDataSource', 'circle1(2,:)')
-set(hp2, 'XDataSource', 'circle2(1,:)')
-set(hp2, 'YDataSource', 'circle2(2,:)')
+[Xc2, Yc2] = drawCircle(circle2);
+hp = plot(Xc2, Yc2);
+set(hp, 'XDataSource', 'Xc2')
+set(hp, 'YDataSource', 'Yc2')
 linkdata on
 tic;
 for i = 1:step:link1maxAngle
 rotateLink(link1, step);
 updateJoint(link1, link2);
-circle1 = circle(link1);
 circle2 = circle(link2);
+[Xc2, Yc2]= drawCircle(circle2);
 refreshdata
 drawnow
-isCollided = collisionRadial(circle1, obstaclePositions);
-if(not(isCollided))
+pause(0.001)
+if (collisionSimple(link1, obstaclePositions))
+    collisionData(i,:) = 1; %don't test link2 if link1 collided
+elseif(collisionRadial(circle2, obstaclePositions))
     for j = 1:step:link2maxAngle
         rotateLink(link2, step);
-        isCollided = collisionRadial(circle2, obstaclePositions);
-        if(isCollided)
+        if(collisionSimple(link2, obstaclePositions))
             collisionData(i,j) = 1;
             isCollided=0;
         end
     end
-else %don't test link2 if link1 collided
-    collisionData(i,:) = 1;
 end
 end
 toc
