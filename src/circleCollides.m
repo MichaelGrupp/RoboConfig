@@ -1,17 +1,24 @@
-%check if circle intersects with a line
-%algorithm: http://mathworld.wolfram.com/Circle-LineIntersection.html
+%check if circle intersects with a line via projection
 function [result] = circleCollides(XDataLine, YDataLine, circle)
 
+seg_a = [XDataLine(1); YDataLine(1)]; seg_b = [XDataLine(2); YDataLine(2)];
 x = circle(1); y = circle(2); r = circle(3);
 
-dx = XDataLine(2)-XDataLine(1);
-dy = YDataLine(2)-YDataLine(1);
-dr = (dx^2 + dy^2); %no sqrt here because we need square later anyway
+seg_v = seg_b - seg_a;
+pt_v = [x;y] - seg_a;
+pt_v2 = [x;y] - seg_b;
 
-D = XDataLine(1)*YDataLine(2) - XDataLine(2)*YDataLine(1);
+proj_v = dot(pt_v, seg_v/norm(seg_v)); %projection norm
+proj_v = proj_v * (seg_v/norm(seg_v)); %projection vector
 
-%discriminant - we are only interested if there is a intersection
-if(((r^2)*dr - D^2) > 0)
+closest = seg_a + proj_v;
+dist_v = [x;y] - closest;
+
+isPointInside = @(XData, YData, x, y) ...
+    (x >= XData(1) && x <= XData(2)) && ...
+    (y >= YData(1) && y <= YData(2));
+
+if(norm(dist_v) < r && (norm(pt_v) < r || norm(pt_v2) < r)) 
     result = 1;
 else
     result = 0;
