@@ -8,7 +8,7 @@ axis([0 xMax 0 yMax])
 
 %robot
 base = [0,0];
-link1Length = 70; link2Length = 20;
+link1Length = 50; link2Length = 20;
 link1maxAngle = 90; link2maxAngle = 360; step = 1;
 
 %init robot laying on bottom of workspace
@@ -34,7 +34,7 @@ collisionData = zeros(link1maxAngle, link2maxAngle);
 circle2 = circle(link2);
 [Xc2, Yc2] = drawCircle(circle2);
 if(animated)
-    hp = plot(Xc2, Yc2);
+    hp = plot(Xc2, Yc2, ':');
     set(hp, 'XDataSource', 'Xc2')
     set(hp, 'YDataSource', 'Yc2')
     linkdata on

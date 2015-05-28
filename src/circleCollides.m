@@ -16,7 +16,12 @@ proj_v = proj_v * (seg_v/norm(seg_v)); %projection vector
 closest = seg_a + proj_v;
 dist_v = [x;y] - closest;
 
-if(norm(dist_v) < r && (norm(pt_v) < r || norm(pt_v2) < r)) 
+isPointInside = @(XData, YData, x, y) ...
+    (x >= XData(1) && x <= XData(2)) && ...
+    (y >= YData(1) && y <= YData(2));
+
+if(norm(dist_v) < r && ...
+    ( (norm(pt_v) < r || norm(pt_v2) < r) || isPointInside(XDataLine, YDataLine, closest(1), closest(2)) )) 
     result = 1;
 else
     result = 0;
