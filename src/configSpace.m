@@ -1,5 +1,5 @@
 %clear existing windows
-close all;
+close all; profile on
 
 %workspace dimensions
 xMax = 100;
@@ -60,3 +60,4 @@ contourf(collisionData')
 colormap(1-gray)
 xlabel('angle link 1'); ylabel('angle link 2');
 
+profile viewer

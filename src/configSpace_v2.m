@@ -1,5 +1,5 @@
 %clear existing windows
-close all; hold on;
+close all; hold on; animated = 1;
 
 %workspace dimensions
 xMax = 100;
@@ -33,19 +33,24 @@ obstaclePositions = [get(obstacle1, 'Position'); get(obstacle2, 'Position');
 collisionData = zeros(link1maxAngle, link2maxAngle);
 circle2 = circle(link2);
 [Xc2, Yc2] = drawCircle(circle2);
-hp = plot(Xc2, Yc2);
-set(hp, 'XDataSource', 'Xc2')
-set(hp, 'YDataSource', 'Yc2')
-linkdata on
+if(animated)
+    hp = plot(Xc2, Yc2);
+    set(hp, 'XDataSource', 'Xc2')
+    set(hp, 'YDataSource', 'Yc2')
+    linkdata on
+end
+
 tic;
 for i = 1:step:link1maxAngle
 rotateLink(link1, step);
 updateJoint(link1, link2);
 circle2 = circle(link2);
-[Xc2, Yc2]= drawCircle(circle2);
-refreshdata
-drawnow
-pause(0.001)
+if(animated)
+    [Xc2, Yc2]= drawCircle(circle2);
+    refreshdata
+    drawnow
+    pause(0.001)
+end
 if (collisionSimple(link1, obstaclePositions))
     collisionData(i,:) = 1; %don't test link2 if link1 collided
 elseif(collisionRadial(circle2, obstaclePositions))
@@ -66,4 +71,3 @@ axis([0 link1maxAngle 0 link2maxAngle])
 contourf(collisionData')
 colormap(1-gray)
 xlabel('angle link 1'); ylabel('angle link 2');
-
