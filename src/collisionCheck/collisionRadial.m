@@ -16,19 +16,19 @@ for i = 1:size(obstaclePositions,1)
         XData4 = [Pos(1)+Pos(3), Pos(1)+Pos(3)]; YData4 = [Pos(2), Pos(2)+Pos(4)];%right
 
         %test lower line (most likely)
-        if(circleCollides(XData1, YData1, circle))
+        if(circleIntersects(XData1, YData1, circle))
             result = 1; break
         end
         %test left line (2nd most likely)
-        if(circleCollides(XData3, YData3, circle))
+        if(circleIntersects(XData3, YData3, circle))
             result = 1; break
         end
         %test top line
-        if(circleCollides(XData2, YData2, circle))
+        if(circleIntersects(XData2, YData2, circle))
             result = 1; break
         end
         %test right line
-        if(circleCollides(XData4, YData4, circle))
+        if(circleIntersects(XData4, YData4, circle))
             result = 1; break
         end
     end

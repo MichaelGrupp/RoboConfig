@@ -1,7 +1,7 @@
 %call plot(XVals, YVals) from outside
 function [XVals, YVals] = drawCircle(circle)
 
-res = 0.05; %angular resolution
+res = 0.3; %angular resolution
 ang=0:res:2*pi+res; %angular steps
 
 x = circle(1);

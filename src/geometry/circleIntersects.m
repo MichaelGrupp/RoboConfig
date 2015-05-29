@@ -1,7 +1,7 @@
 %check if circle intersects with a line via projection
 %like described here: http://doswa.com/2009/07/13/circle-segment-intersectioncollision.html
 %plus additional checks implemented
-function [result] = circleCollides(XDataLine, YDataLine, circle)
+function [result] = circleIntersects(XDataLine, YDataLine, circle)
 
 seg_a = [XDataLine(1); YDataLine(1)]; seg_b = [XDataLine(2); YDataLine(2)];
 x = circle(1); y = circle(2); r = circle(3);
