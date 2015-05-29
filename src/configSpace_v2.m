@@ -1,9 +1,8 @@
 %clear existing windows
-close all; hold on; animated = 1;
+close all; hold on; animation = 2;
 
 %workspace dimensions
-xMax = 100;
-yMax = 100;
+xMax = 100; yMax = 100;
 axis([0 xMax 0 yMax])
 
 %robot
@@ -33,7 +32,7 @@ obstaclePositions = [get(obstacle1, 'Position'); get(obstacle2, 'Position');
 collisionData = zeros(link1maxAngle, link2maxAngle);
 circle2 = circle(link2);
 [Xc2, Yc2] = drawCircle(circle2);
-if(animated)
+if(animation)
     hp = plot(Xc2, Yc2, ':');
     set(hp, 'XDataSource', 'Xc2')
     set(hp, 'YDataSource', 'Yc2')
@@ -45,7 +44,7 @@ for i = 1:step:link1maxAngle
 rotateLink(link1, step);
 updateJoint(link1, link2);
 circle2 = circle(link2);
-if(animated)
+if(animation)
     [Xc2, Yc2]= drawCircle(circle2);
     refreshdata
     drawnow
@@ -56,6 +55,9 @@ if (collisionSimple(link1, obstaclePositions))
 elseif(collisionRadial(circle2, obstaclePositions))
     for j = 1:step:link2maxAngle
         rotateLink(link2, step);
+        if(animation==2 && mod(j,10)==0)
+            pause(0.001)
+        end
         if(collisionSimple(link2, obstaclePositions))
             collisionData(i,j) = 1;
             isCollided=0;
