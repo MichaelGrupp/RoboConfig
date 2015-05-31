@@ -7,12 +7,16 @@ classdef ConfigurationSpace < handle
         function init(obj, robot)
            obj.collisionData = zeros(robot.link1maxAngle, robot.link2maxAngle);
         end
+        
         function generate(obj, robot, workspace, animation)
             step = 1;
             tic;
             for i = 1:step:robot.link1maxAngle
             robot.rotateLink(robot.link1, step);
             robot.updateJoints();
+            if(animation)
+                pause(0.001)
+            end
             if (robot.linkCollides(robot.link1, workspace.obstaclePositions))
                 obj.collisionData(i,:) = 1; %don't test robot.link2 if robot.link1 collided
             elseif(robot.circleCollides(robot.link2, workspace.obstaclePositions))
@@ -29,6 +33,7 @@ classdef ConfigurationSpace < handle
             end
             toc
         end
+        
         function plot(obj)
             figure;
             axis([0 size(obj.collisionData, 1) 0 size(obj.collisionData, 2)])
